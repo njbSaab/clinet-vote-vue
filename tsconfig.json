@@ -1,0 +1,69 @@
+// tsconfig.json — ОФИЦИАЛЬНЫЙ ПРОДАКШН-ГОТОВЫЙ ДЛЯ VUE 3 + VITE 6 (2025)
+{
+  "extends": "@vue/tsconfig/tsconfig.json",        // ← Оставляем! Это база от Vue
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.vue",
+    "src/**/*.tsx",
+    "src/**/*.jsx"
+  ],
+  "exclude": ["node_modules", "dist", "**/*.js"],
+
+  "compilerOptions": {
+    // === ОБЯЗАТЕЛЬНО ДЛЯ VITE + VUE ===
+    "target": "ES2022",
+    "module": "ESNext",                    // ← НЕ "nodenext"! Только ESNext!
+    "moduleResolution": "Bundler",         // ← Это ключ к жизни в Vite
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+
+    // === Пути и алиасы ===
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+
+    // === Vue-специфичное ===
+    "jsx": "preserve",                     // ← Не "react-jsx"! Vue использует "preserve"
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,               // ← Обязательно для vite + unplugin
+
+    // === Строгие типы (ты любишь строгость — держи!) ===
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "noImplicitThis": true,
+    "useUnknownInCatchVariables": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+
+    // === Полезные проверки ===
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+
+    // === Вывод ===
+    "sourceMap": true,
+    "declaration": false,                  // ← Не нужно в Vite
+    "declarationMap": false,
+    "skipLibCheck": true,                  // ← Ускоряет компиляцию
+
+    // === Типы для плагинов ===
+    "types": [
+      "vite/client",
+      "unplugin-icons/types/vue",
+      "unplugin-vue-router/client"
+    ],
+
+    // === Дополнительно (по желанию) ===
+    "allowJs": false,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true                           // ← Vite сам собирает, tsc только проверяет
+  }
+}

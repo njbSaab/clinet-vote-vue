@@ -1,0 +1,41 @@
+src/
+├── App.vue
+├── main.ts
+├── router/
+│   └── index.ts
+├── stores/
+│   └── auth.ts          ← новый
+│   └── user.ts          ← новый
+│   └── index.ts
+├── pages/
+│   ├── public/          ← публичные страницы
+│   │   └── index.vue    ← главная (HomePage)
+│   ├── auth/
+│   │   ├── Login.vue
+│   │   └── Register.vue
+│   └── dashboard/       ← личный кабинет (защищённые маршруты)
+│       ├── index.vue    ← общий layout кабинета
+│       ├── Profile.vue
+│       ├── Settings.vue
+│       └── blocks/      ← блоки кабинета
+│           ├── StatsBlock.vue
+│           ├── ActivityBlock.vue
+│           └── NotificationsBlock.vue
+├── components/
+│   ├── ui/              ← переиспользуемые (кнопки, инпуты)
+│   ├── blocks/          ← блоки главной страницы
+│   │   ├── HeroBlock.vue
+│   │   ├── FeaturesBlock.vue
+│   │   ├── StatsBlock.vue
+│   │   └── CTA_Block.vue
+│   └── layout/
+│       ├── Header.vue
+│       ├── Footer.vue
+│       └── Sidebar.vue
+├── layouts/
+│   ├── PublicLayout.vue
+│   └── DashboardLayout.vue  ← для личного кабинета
+├── assets/
+│   └── images/...
+└── plugins/
+    └── index.ts
