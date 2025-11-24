@@ -45,7 +45,7 @@ const props = defineProps<{
         <div class="footer-wrapper flex flex-col gap-6">
           <div class="timer-group" v-auto-animate>
             <p class="text-white text-center">До события осталось:</p>
-            <p
+            <p v-if="event"
               class="text-3xl md:text-5xl text-white text-center font-bold bg-shadow-inset px-4 py-4"
             >
               <span
@@ -72,9 +72,9 @@ const props = defineProps<{
                 {{ String(seconds).padStart(2, "0") }}
               </span>
             </p>
-            <!-- Если закончилось -->
-            <div class="skeleton h-[80px] w-full" v-if="isExpired"></div>
+            <div class="skeleton h-[80px] rounded-xl w-full max-w-[450px] px-4 py-4" v-else></div>
 
+            <!-- Если закончилось -->
           </div>
         </div>
 

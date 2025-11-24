@@ -14,7 +14,7 @@ const isVisible = ref(false);
         Главный приз
       </h2>
 
-      <div class="main-prize-items max-w-screen-md mx-auto my-6 md:my-12" v-auto-animate>
+      <div class="main-prize-items max-w-screen-md mx-auto my-6 md:mt-12 mb-0" v-auto-animate>
         <div class="main-prize-item glow-breath w-[90%] md:min-w-[400px] md:w-fit mx-auto">
           <h3
             class="text-6xl md:text-7xl lg:text-8xl text-center font-bold py-[20px] leading-tight"

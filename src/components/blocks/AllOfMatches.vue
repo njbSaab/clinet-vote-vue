@@ -134,7 +134,7 @@ onUnmounted(() => stopAutoPlay());
 <style scoped>
 .scene {
   width: 520px;
-  height: 420px;
+  height: 350px;
   margin: 0 auto;
   perspective: 2000px;
 }
