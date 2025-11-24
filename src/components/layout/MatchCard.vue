@@ -1,9 +1,10 @@
 <!-- src/components/blocks/MatchCard.vue -->
 <script setup lang="ts">
-import type { EventData } from "@/types/api";
+import type { PublicEvent } from "@/types/api";
+import { defineProps } from "vue";
 
 const props = defineProps<{
-  event: EventData | null;
+  event: PublicEvent | null;
 }>();
 </script>
 
@@ -17,16 +18,16 @@ const props = defineProps<{
       <div class="card-primary-inner flex flex-col items-center justify-center gap-lg">
         <div class="card-primary-text flex-col-center">
           <h5
-            class="card-primary-title bg-gradient-to-r from-blue-300 via-white to-red-300 bg-clip-text text-transparent text-[50px] font-bold text-center leading-[1.1]"
+            class="card-primary-title bg-gradient-to-r from-blue-300 via-white to-red-300 bg-clip-text text-transparent text-[35px] md:text-[50px] font-bold text-center leading-[1.1]"
           >
-            {{ event?.name || "Событие завершилось..." }}
+            {{ event?.title || "Событие завершилось..." }}
           </h5>
           <p class="card-primary-text text-center text-xl text-white">
-            {{ event?.type || "ожидайте новое голосование" }}
+            {{ event?.sport || "ожидайте новое голосование" }}
             <span class="card-primary-subtext block text-center">
               {{
-                event?.endAt
-                  ? new Date(event.endAt).toLocaleDateString("ru-RU")
+                event?.votingEndsAt
+                  ? new Date(event.votingEndsAt).toLocaleDateString("ru-RU")
                   : "ожидайте новое голосование"
               }}
             </span>
@@ -37,12 +38,14 @@ const props = defineProps<{
           <div class="mebmer flex flex-col items-center justify-center gap-2">
             <picture>
               <img
-                :src="event?.imageMemberA"
-                :alt="event?.memberA"
+                v-if="event?.logoA"
+                :src="event?.logoA"
+                :alt="event?.participantA"
                 class="w-24 h-24 md:w-32 md:h-32 object-contain"
               />
+             <div v-else class="rounded-[100%] skeleton w-24 h-24 md:w-32 md:h-32"></div>
             </picture>
-            <p class="text-[22px] text-white">{{ event?.memberA }}</p>
+            <p class="text-[22px] text-white">{{ event?.participantA }}</p>
           </div>
 
           <div class="result px-4">
@@ -60,12 +63,14 @@ const props = defineProps<{
           <div class="mebmer flex flex-col items-center justify-center gap-2">
             <picture>
               <img
-                :src="event?.imageMemberB"
-                :alt="event?.memberB"
+                v-if="event?.logoB"
+                :src="event?.logoB"
+                :alt="event?.participantB"
                 class="w-24 h-24 md:w-32 md:h-32 object-contain"
               />
+            <div v-else class="rounded-[100%] skeleton w-24 h-24 md:w-32 md:h-32"></div>
             </picture>
-            <p class="text-[22px] text-white">{{ event?.memberB }}</p>
+            <p class="text-[22px] text-white">{{ event?.participantB }}</p>
           </div>
         </div>
       </div>

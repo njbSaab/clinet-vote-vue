@@ -1,23 +1,28 @@
 // src/types/api.ts
-export interface EventData {
-    id: number;
-    typeEventId: string;
-    name: string;
-    type: string;
-    endAt: string;  // ISO string, можно Date в будущем
-    memberA: string;
-    memberB: string;
-    imageMemberA: string;
-    imageMemberB: string;
-    imageBgDesk: string;
-    imageBgMob: string;
-    result: null | unknown;  // Пока null, уточни тип позже
-    grandPrize: string;
-    everyoneForPrize: string;
-    status: 'active' | 'inactive' | 'ended';  // Union для статусов
-    createdAt: string;
-    landing_url: string;
-  }
+export interface PublicEvent {
+  id: number,
+  typeEventId: string,
+  title: string,
+  sport: string,
+  participantA: string,
+  participantB: string,
+  logoA: string,
+  logoB: string,
+  result: string | null,
+  eventStartsAt: string,
+  votingEndsAt: string,
+  totalVotes: number,
+  isMainEvent: boolean,
+  imageBgDesktop: string,
+  imageBgMobile: string,
+  grandPrize: string,
+  percentageA: string,
+  percentageB: string,
+  percentageDraw: boolean,
+  hasVotingEnded: boolean,
+  userAlreadyVoted: boolean,
+  userChoice: 1 | 2 | 3 | null
+}
   
   // Опционально: тип для ошибки (если API возвращает { success: false, error: ... })
   export interface ApiError {

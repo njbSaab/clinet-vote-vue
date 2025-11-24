@@ -8,10 +8,10 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AllOfMatches: typeof import('./components/blocks/AllOfMatches.vue')['default']
+    AuthCodeModal: typeof import('./components/layout/AuthCodeModal.vue')['default']
     FAQ: typeof import('./components/blocks/FAQ.vue')['default']
     Footer: typeof import('./components/layout/Footer.vue')['default']
     Header: typeof import('./components/layout/Header.vue')['default']
-    HelloWorld: typeof import('./components/HelloWorld.vue')['default']
     HeroBlock: typeof import('./components/blocks/HeroBlock.vue')['default']
     HowItWork: typeof import('./components/blocks/HowItWork.vue')['default']
     IsLoading: typeof import('./components/ui/IsLoading.vue')['default']
@@ -20,6 +20,5 @@ declare module 'vue' {
     MatchCard: typeof import('./components/layout/MatchCard.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    SliderBlock: typeof import('./components/blocks/SliderBlock.vue')['default']
   }
 }

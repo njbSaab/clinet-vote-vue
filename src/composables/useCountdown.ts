@@ -2,6 +2,8 @@
 import { ref, computed, watch, onUnmounted, type Ref } from 'vue'
 
 export function useCountdown(targetDateRef: Ref<string | null | undefined>) {
+  console.log(targetDateRef.value);
+  
   const now = ref(Date.now())
   let interval: number | null = null
 

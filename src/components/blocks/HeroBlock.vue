@@ -30,7 +30,16 @@ const props = defineProps<{
         <div class="card-decor card-decor--second"></div> -->
 
         <!-- Карточка матча (теперь отдельный компонент с декорами!) -->
-        <MatchCard :event="event" />
+
+        <div v-if="event?.typeEventId"
+          :to="{ name: 'vote', params: { typeEventId: event.typeEventId } }">
+          <MatchCard :event="event" />
+        </div>
+
+        <!-- Если событие ещё не загрузилось — показываем заглушку -->
+        <div v-else class="animate-pulse">
+          <MatchCard :event="null" />
+        </div>
 
         <!-- Таймер -->
         <div class="footer-wrapper flex flex-col gap-6">
@@ -74,15 +83,19 @@ const props = defineProps<{
           </div>
         </div>
 
-        <!-- Кнопка -->
-        <div class="button-wrapp">
-          <button class="btn btn-gradient-hover mx-auto text-xl px-12 py-4">
-            Сделать прогноз
-          </button>
-        </div>
+        <button 
+          v-if="event?.typeEventId"
+          @click="$router.push({ name: 'vote', params: { typeEventId: event.typeEventId } })"
+          class="btn btn-gradient-hover"
+        >
+          Сделать прогноз
+        </button>
       </div>
     </div>
   </section>
+  <div>
+    
+  </div>
 </template>
 <style scoped>
 .hero {
