@@ -62,47 +62,57 @@
     <!-- Модалка авторизации -->
     <AuthCodeModal
       v-if="showAuthModal"
-      :type-event-id="typeEventId"
-      :choice="selectedChoice"
-      :reload-event="reload"
-      @close="showAuthModal = false"
+        :type-event-id="fixedEventId"
+        :choice="selectedChoice"
+        :reload-event="reload"
+        @close="showAuthModal = false"
+        :key="fixedEventId"
     />
 
     <Footer />
   </div>
 </template>
-
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useEventBySlug } from '@/composables/useEventBySlug'
 import { useCountdown } from '@/composables/useCountdown'
 
 const route = useRoute()
 
-// Реактивный slug — работает и при прямом заходе, и при навигации
-const typeEventId = computed(() => route.params.typeEventId as string)
+// Запоминаем slug один раз
+const fixedEventId = ref<string>('')
 
-// Загрузка события
-const { event, loading, error, reload } = useEventBySlug(typeEventId)
+onMounted(() => {
+  const slug = route.params.typeEventId as string
+  console.log('VotePage: ЗАПОМИНАЕМ slug →', slug)
+  fixedEventId.value = slug
+})
+
+// Загружаем событие
+const { event, loading, error, reload } = useEventBySlug(fixedEventId)
 
 // Таймер
 const countdown = useCountdown(computed(() => event.value?.votingEndsAt || null))
 const timer = computed(() => countdown.timeLeft.value || { expired: true })
 
-// Выбор пользователя
+// Выбор
 const selectedChois = ref<'participantA' | 'participantB' | 'draw'>('participantA')
-const selectedChoice = ref<1 | 2 | 3>(1) // ← ЭТО БЫЛО ПРОПУЩЕНО!
+const selectedChoice = ref<1 | 2 | 3>(1)
 
-// Синхронизация выбора
-watch(selectedChois, (val: 'participantA' | 'participantB' | 'draw') => {
+watch(selectedChois, (val) => {
   selectedChoice.value = val === 'participantA' ? 1 : val === 'participantB' ? 2 : 3
 }, { immediate: true })
 
 // Модалка
 const showAuthModal = ref(false)
+
 const openAuthModal = () => {
-  if (!typeEventId.value) return
+  console.log('VotePage: открываем модалку')
+  if (!fixedEventId.value) {
+    alert('Событие не загружено')
+    return
+  }
   showAuthModal.value = true
 }
 </script>
@@ -154,14 +164,14 @@ const openAuthModal = () => {
   border-radius: 50%;
 }
 
-.radio-container .glider-container .glider::after {
+/* .radio-container .glider-container .glider::after {
   content: "";
   position: absolute;
   left: -5px;
   height: 100%;
   width: 100%;
   background: linear-gradient(90deg, var(--main-color-opacity) 0%, transparent 100%);
-}
+} */
 
 .radio-container label {
   cursor: pointer;

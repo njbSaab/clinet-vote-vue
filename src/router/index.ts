@@ -5,14 +5,13 @@ import { useAuthStore } from '@/stores/auth'
 const routes = [
   { path: '/', component: () => import('@/pages/public/index.vue') },
   { path: '/login', name: 'login', component: () => import('@/pages/public/RegisterPage.vue') },
-    {
+  {
     path: '/cabinet',
     component: () => import('@/layouts/DashboardLayout.vue'),
     meta: { requiresAuth: true },
     children: [
-      { path: '', redirect: 'profile' },
-      { path: '/profile', name: 'profile', component: () => import('@/pages/dashboard/ProfilePage.vue') },
-      { path: '/events', name: 'my-events', component: () => import('@/pages/dashboard/MyEventsPage.vue') },
+      { path: '', name: 'profile', component: () => import('@/pages/dashboard/ProfilePage.vue') },
+      { path: 'events', name: 'my-events', component: () => import('@/pages/dashboard/MyEventsPage.vue') },
     ],
   },
   { 
@@ -32,8 +31,18 @@ const router = createRouter({
 // ЖЕЛЕЗНЫЙ ГАРД — РАБОТАЕТ КАК В ПРОДАКШЕНЕ
 // src/router/index.ts
 router.beforeEach(async (to, from, next) => {
-  const authStore = useAuthStore()
+  console.log('Router: переход →', from.path, '→', to.path)
 
+// Запрещаем любой доступ к /vote/* если slug — зарезервированное слово
+  if (to.path.startsWith('/vote/')) {
+    const slug = to.params.typeEventId as string
+    const reserved = ['profile', 'cabinet', 'me', 'login', 'events', 'auth', 'vote', '']
+    if (slug && reserved.includes(slug.toLowerCase())) {
+      console.log('БЛОКИРУЕМ /vote/profile → редиректим в /cabinet')
+      return next('/cabinet')
+    }
+  }
+  const authStore = useAuthStore()
   if (to.meta.requiresAuth) {
     await authStore.loadUser()
 
@@ -41,7 +50,6 @@ router.beforeEach(async (to, from, next) => {
       return next('/login')
     }
   }
-
   next()
 })
 
