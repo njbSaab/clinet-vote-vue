@@ -17,6 +17,7 @@
         v-for="vote in user.votesHistory"
         :key="vote.votedAt"
         class="bg-white/5 backdrop-blur-xl rounded-3xl p-6 border border-white/10 hover:border-white/30 transition"
+        v-auto-animate
       >
         <div class="flex justify-between items-start mb-4">
           <div>
@@ -63,7 +64,7 @@
           <div>
             <p class="text-white/60">Приз события:</p>
             <p class="font-bold text-xl text-yellow-400">
-              {{ vote.grandPrize ? vote.grandPrize + ' ₽' : '—' }}
+              {{ vote.grandPrize ? vote.grandPrize + ' $' : '—' }}
             </p>
           </div>
         </div>

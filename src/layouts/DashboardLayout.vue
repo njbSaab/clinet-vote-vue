@@ -1,14 +1,9 @@
 <template>
   <div class="min-h-screen bg-gradient-to-b from-black via-[#0a001f] to-black text-white">
-    <main class="container mx-auto px-4 pt-24 pb-20">
-      <div class="max-w-4xl mx-auto">
-        <!-- Заголовок -->
-        <h1 class="text-5xl font-bold text-center mb-12 bg-gradient-to-r from-blue-500 to-red-500 bg-clip-text text-transparent">
-          Личный кабинет
-        </h1>
-
+    <main class="container mx-auto pt-[15px] px-[20px] mb-0 min-h-[77dvh]">
+      <div class="max-w-4xl mx-auto" v-auto-animate>
         <!-- Табы -->
-        <div class="flex justify-center gap-8 mb-12 border-b border-white/20 w-fit mx-auto">
+        <div class="flex justify-center gap-8 mb-8 border-b border-white/20 w-fit mx-auto">
         <router-link
             to="/"
             class="pb-4 px-6 text-xl font-medium transition relative"
@@ -17,8 +12,9 @@
               'text-white/60 hover:text-white': $route.path.includes('/cabinet/')
             }"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12.204c0-2.289 0-3.433.52-4.381c.518-.949 1.467-1.537 3.364-2.715l2-1.241C9.889 2.622 10.892 2 12 2s2.11.622 4.116 1.867l2 1.241c1.897 1.178 2.846 1.766 3.365 2.715S22 9.915 22 12.203v1.522c0 3.9 0 5.851-1.172 7.063S17.771 22 14 22h-4c-3.771 0-5.657 0-6.828-1.212S2 17.626 2 13.725z"/><path stroke-linecap="round" d="M12 15v3"/></g></svg>
-    <span v-if="$route.path.includes('profile')" class="absolute bottom-0 left-0 w-full h-1 bg-white"></span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24"><!-- Icon from Material Symbols Light by Google - https://github.com/google/material-design-icons/blob/master/LICENSE --><path fill="currentColor" d="M5 19V9.452l-2.396 1.779l-.598-.787L12 3l10.02 7.439l-.604.792L12 4.25L6 8.716V18h2.673v1zm9.637 2l-3.533-3.538l.708-.714l2.825 2.825l5.675-5.65l.688.714z"/></svg>
+            <span v-if="$route.path.includes('profile')" class="absolute bottom-0 left-0 w-full h-1 bg-white">
+            </span>
           </router-link>
 
           <router-link
@@ -43,6 +39,11 @@
           >
             Мои голоса
           </router-link>
+
+
+          <div class="logout cursor-pointer" @click="logout">
+            <svg class="p-0" xmlns="http://www.w3.org/2000/svg" width="35px" height="35px" viewBox="0 0 24 24"><!-- Icon from Google Material Icons by Material Design Authors - https://github.com/material-icons/material-icons/blob/master/LICENSE --><path fill="currentColor" d="M9 2h9c1.1 0 2 .9 2 2v16c0 1.1-.9 2-2 2H9c-1.1 0-2-.9-2-2v-2h2v2h9V4H9v2H7V4c0-1.1.9-2 2-2" /><path fill="currentColor" d="M10.09 15.59L11.5 17l5-5l-5-5l-1.41 1.41L12.67 11H3v2h9.67z" /></svg>
+          </div>
         </div>
 
         <!-- Контент -->
@@ -53,3 +54,28 @@
     <Footer />
   </div>
 </template>
+<script setup lang="ts">
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+import { useToastStore } from '@/stores/toast'
+import api from '@/api/index'
+
+const router = useRouter()
+const authStore = useAuthStore()
+const toastStore = useToastStore()
+
+// В твоём компоненте или сторе
+const logout = async () => {
+  try {
+    await api.post('/auth/logout')  // ← это удалит куку на сервере
+  } catch (err) {
+    console.log('Сервер не ответил, но кука всё равно умрёт при перезагрузке')
+  }
+  // Очищаем фронт
+  authStore.user = null
+  localStorage.clear()
+  toastStore.success('Вы вышли!')
+  router.push('/')
+}
+
+</script>

@@ -203,7 +203,7 @@ const verifyCode = async () => {
 
     // 2. Логинимся
     authStore.login(res.data.user);
-    await authStore.loadUser();
+    // await authStore.loadUser();
 
     // 3. Голосуем — используем зафиксированный id!
     console.log('AuthCodeModal: отправляем голос за событие →', props.typeEventId)

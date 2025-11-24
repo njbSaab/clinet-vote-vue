@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, nextTick, onMounted, onUnmounted } from "vue";
+import { ref, watch, nextTick, onMounted, onUnmounted, defineProps } from "vue";
 import { gsap } from "gsap";
 import type { PublicEvent } from "@/types/api";
 import { computed } from 'vue'

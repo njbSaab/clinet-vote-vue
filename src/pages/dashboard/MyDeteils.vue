@@ -1,7 +1,9 @@
 <template>
-    <div>
-        my details
-    </div>
+    <section class="my-details">
+        <div class="container">
+            my details
+        </div>
+    </section>
 </template>
 
 <script setup>

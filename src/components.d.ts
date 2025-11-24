@@ -20,5 +20,6 @@ declare module 'vue' {
     MatchCard: typeof import('./components/layout/MatchCard.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    ToastInfo: typeof import('./components/ui/ToastInfo.vue')['default']
   }
 }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { EventData } from "@/types/api";
-
+import { defineProps } from "vue";
 // ЭТО ОБЯЗАТЕЛЬНО: defineProps + типы
 const props = defineProps<{
   event: EventData | null;

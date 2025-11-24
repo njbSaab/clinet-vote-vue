@@ -1,34 +1,122 @@
+<template>
+  <div class="min-h-screen bg-gradient-to-b from-black via-[#0a001f] to-black text-white" v-auto-animate>
+    <Header />
+
+    <ToastInfo />
+    <main class="container mx-auto px-4 md:pt-24 pt-32 min-h-[85.5dvh] md:min-h-[77dvh]">
+      <div class="max-w-md mx-auto" v-auto-animate>
+
+        <!-- Заголовок -->
+        <h1 class="text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-blue-500 to-red-500 bg-clip-text text-transparent">
+          <span class="block animate__animated animate__fadeInDown">
+            Вход по коду
+          </span>
+        </h1>
+
+        <!-- Первый шаг — ввод имени и email -->
+        <form v-if="!showCodeForm" @submit.prevent="sendCode" class="space-y-8">
+          <div>
+            <label class="block text-lg mb-3 opacity-90">Ваше имя</label>
+            <input
+              v-model="name"
+              type="text"
+              required
+              autofocus
+              class="w-full px-6 py-[20px] rounded-2xl bg-white/10 backdrop-blur-lg border border-white/20 focus:border-white/50 outline-none transition"
+              placeholder="Алексей"
+            />
+          </div>
+
+          <div>
+            <label class="block text-lg mb-3 opacity-90">Email</label>
+            <input
+              v-model="email"
+              type="email"
+              required
+              class="w-full px-6 py-[20px] rounded-2xl bg-white/10 backdrop-blur-lg border border-white/20 focus:border-white/50 outline-none transition"
+              placeholder="you@example.com"
+            />
+          </div>
+          <small v-if="message">{{ message }}</small>
+          <button
+            type="submit"
+            :disabled="isLoading || isBlocked"
+
+            class="w-full py-5 rounded-2xl font-bold text-xl bg-gradient-to-r from-blue-600 to-red-600 hover:from-blue-500 hover:to-red-500 transition-all transform hover:scale-105 disabled:opacity-70"
+          >
+            <span v-if="isBlocked">
+                Заблокировано ({{ blockTimeLeft }} сек)
+              </span>
+              <span v-else>
+            {{ isLoading ? 'Отправляем код...' : 'Получить код на почту' }}
+              </span>
+          </button>
+        </form>
+
+        <!-- Второй шаг — ввод кода -->
+        <div v-else class="space-y-8 text-center">
+          <p class="text-white/70 text-lg">
+            Код отправлен на <span class="text-white font-bold">{{ email }}</span>
+          </p>
+
+          <input
+            v-model="code"
+            type="text"
+            inputmode="numeric"
+            maxlength="6"
+            placeholder="000000"
+            autofocus
+            class="w-full px-6 py-[20px] text-center text-4xl tracking-widest font-mono rounded-2xl bg-white/10 backdrop-blur-lg border border-white/20 focus:border-white/50 outline-none transition"
+            @input="code = $event.target.value.replace(/\D/g, '').slice(0,6)"
+          />
+          <small class="text-[15px] text-error relative bottom-[-15px]" v-if="message">{{ message }}</small>
+          <button
+              @click="verifyCode"
+              :disabled="isLoading || code.length !== 6 || isBlocked"
+              class="w-full py-5 rounded-2xl font-bold text-xl bg-gradient-to-r from-blue-600 to-red-600 transition-all transform hover:scale-105 disabled:opacity-50"
+            >
+              <span v-if="isBlocked">
+                Заблокировано ({{ blockTimeLeft }} сек)
+              </span>
+              <span v-else>
+                {{ isLoading ? 'Проверяем...' : 'Войти' }}
+              </span>
+            </button>
+
+          <button @click="showCodeForm = false" class="text-blue-400 hover:underline text-sm">
+            ← Изменить email
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <Footer />
+  </div>
+</template>
+
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '@/api'
 import { useAuthStore } from '@/stores/auth'
+import { useCodeAttempts } from '@/composables/useCodeAttempts'
 
 const router = useRouter()
 const authStore = useAuthStore()
-
-// true = регистрация (по коду), false = вход (пока заглушка)
-const isRegister = ref(false)
-
-// Регистрация по коду
+// Защита от брута
+const { failedAttempts, attemptsLeft, isBlocked, blockTimeLeft, incrementFailed, resetAttempts } = useCodeAttempts()
 const showCodeForm = ref(false)
 const email = ref('')
 const name = ref('')
 const code = ref('')
 const isLoading = ref(false)
-
-const toggleMode = () => {
-  isRegister.value = !isRegister.value
-  showCodeForm.value = false
-  email.value = ''
-  name.value = ''
-  code.value = ''
-}
-
-const startRegister = async () => {
+const message = ref('')
+const sendCode = async () => {
   if (!email.value || !name.value) return
 
+  resetAttempts()
   isLoading.value = true
+
   try {
     await api.post('/auth/send-code', {
       email: email.value,
@@ -37,7 +125,7 @@ const startRegister = async () => {
     })
     showCodeForm.value = true
   } catch (err: any) {
-    alert(err.response?.data?.message || 'Не удалось отправить код')
+    message.value = (err.response?.data?.message || 'Не удалось отправить код')
   } finally {
     isLoading.value = false
   }
@@ -46,163 +134,39 @@ const startRegister = async () => {
 const verifyCode = async () => {
   if (code.value.length !== 6) return
 
+  if (isBlocked.value) {
+    message.value = (`Слишком много попыток! Подождите ${blockTimeLeft.value} сек`)
+    return
+  }
+
   isLoading.value = true
+
   try {
     const res = await api.post('/auth/verify-code', {
       email: email.value,
       code: code.value,
     })
 
-    // 1. Сохраняем минимальные данные
+    resetAttempts()
     authStore.login(res.data.user)
+    // await authStore.loadUser()
+    router.replace('/cabinet')
 
-    // 2. КРИТИЧЕСКИ ВАЖНО: сразу загружаем полный профиль!
-    await authStore.loadUser()
-
-    // 3. Теперь точно авторизован → можно в кабинет
-    router.push('/cabinet')
   } catch (err: any) {
-    alert(err.response?.data?.message || 'Неверный код')
+    incrementFailed()
+
+    const left = attemptsLeft.value
+
+    if (left <= 0) {
+      message.value = ('Аккаунт заблокирован на 10 минут')
+    } else {
+      message.value = (`Неверный код! Осталось попыток: ${left}`)
+    }
   } finally {
     isLoading.value = false
   }
 }
-
-// Заглушка для входа (пока не реализовано)
-const handleLogin = () => {
-  alert('Вход по паролю скоро будет доступен')
-}
 </script>
-
-<template>
-  <div class="min-h-screen bg-gradient-to-b from-black via-[#0a001f] to-black text-white"
-  v-auto-animate>
-    <Header />
-
-    <main class="container mx-auto px-4 md:pt-24 pt-32 min-h-[85.5dvh]  md:min-h-[77dvh]">
-      <div class="max-w-md mx-auto" v-auto-animate>
-        <!-- Заголовок -->
-        <h1 class="text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-blue-500 to-red-500 bg-clip-text text-transparent">
-          <span class="block animate__animated animate__fadeInDown">
-            {{ isRegister ? 'Создать аккаунт' : 'Вход в аккаунт' }}
-          </span>
-        </h1>
-
-        <!-- РЕГИСТРАЦИЯ -->
-        <div v-if="isRegister" v-auto-animate>
-          <!-- Первый шаг — ввод имени и email -->
-          <form v-if="!showCodeForm" @submit.prevent="startRegister" class="space-y-8">
-            <div>
-              <label class="block text-lg mb-3 opacity-90">Ваше имя</label>
-              <input
-                v-model="name"
-                type="text"
-                required
-                class="w-full px-6 py-[20px] rounded-2xl bg-white/10 backdrop-blur-lg border border-white/20 focus:border-white/50 outline-none transition"
-                placeholder="Алексей"
-                autofocus
-              />
-            </div>
-
-            <div>
-              <label class="block text-lg mb-3 opacity-90">Email</label>
-              <input
-                v-model="email"
-                type="email"
-                required
-                class="w-full px-6 py-[20px] rounded-2xl bg-white/10 backdrop-blur-lg border border-white/20 focus:border-white/50 outline-none transition"
-                placeholder="you@example.com"
-              />
-            </div>
-
-            <button
-              type="submit"
-              :disabled="isLoading"
-              class="w-full py-5 rounded-2xl font-bold text-xl bg-gradient-to-r from-blue-600 to-red-600 hover:from-blue-500 hover:to-red-500 transition-all transform hover:scale-105 disabled:opacity-70"
-            >
-              {{ isLoading ? 'Отправляем код...' : 'Получить код на почту' }}
-            </button>
-          </form>
-
-          <!-- Второй шаг — ввод кода -->
-          <div v-else class="space-y-8">
-            <p class="text-center text-white/70 text-lg">
-              Код отправлен на <span class="text-white font-bold">{{ email }}</span>
-            </p>
-
-            <input
-              v-model="code"
-              type="text"
-              inputmode="numeric"
-              maxlength="6"
-              placeholder="000000"
-              autofocus
-              class="w-full px-6 py-[20px] text-center text-4xl tracking-widest font-mono rounded-2xl bg-white/10 backdrop-blur-lg border border-white/20 focus:border-white/50 outline-none transition"
-              @input="code = $event.target.value.replace(/\D/g, '').slice(0,6)"
-            />
-
-            <button
-              @click="verifyCode"
-              :disabled="isLoading || code.length !== 6"
-              class="w-full py-5 rounded-2xl font-bold text-xl bg-gradient-to-r from-blue-600 to-red-600 hover:from-blue-500 hover:to-red-500 transition-all transform hover:scale-105 disabled:opacity-70"
-            >
-              {{ isLoading ? 'Проверяем...' : 'Завершить регистрацию' }}
-            </button>
-
-            <button @click="showCodeForm = false" class="text-blue-400 hover:underline text-sm block mx-auto">
-              ← Изменить email
-            </button>
-          </div>
-        </div>
-
-        <!-- ВХОД (пока заглушка) -->
-        <form v-else @submit.prevent="handleLogin" class="space-y-8" v-auto-animate>
-          <div>
-            <label class="block text-lg mb-3 opacity-90">Email</label>
-            <input
-              type="email"
-              required
-              class="w-full px-6 py-[20px] rounded-2xl bg-white/10 backdrop-blur-lg border border-white/20 focus:border-white/50 outline-none transition"
-              placeholder="you@example.com"
-            />
-          </div>
-
-          <div>
-            <label class="block text-lg mb-3 opacity-90">Пароль</label>
-            <input
-              type="password"
-              required
-              class="w-full px-6 py-[20px] rounded-2xl bg-white/10 backdrop-blur-lg border border-white/20 focus:border-white/50 outline-none transition"
-              placeholder="••••••••"
-            />
-          </div>
-
-          <button
-            type="submit"
-            class="w-full py-5 rounded-2xl font-bold text-xl bg-gradient-to-r from-blue-600 to-red-600 hover:from-blue-500 hover:to-red-500 transition-all transform hover:scale-105"
-          >
-            Войти
-          </button>
-        </form>
-
-        <!-- Переключатель -->
-        <p class="text-center mt-8 text-white/60">
-          {{ isRegister ? 'Уже есть аккаунт?' : 'Нет аккаунта?' }}
-          <button
-            @click="toggleMode"
-            type="button"
-            class="text-blue-400 hover:underline font-medium ml-2 transition"
-          >
-            {{ isRegister ? 'Войти' : 'Зарегистрироваться' }}
-          </button>
-        </p>
-      </div>
-    </main>
-
-    <Footer />
-  </div>
-</template>
-
 <style scoped>
 /* Анимация появления заголовка */
 .animate-fadeIn {
@@ -223,4 +187,5 @@ const handleLogin = () => {
   opacity: 0;
   transform: translateY(-20px);
 }
+
 </style>

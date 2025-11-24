@@ -7,6 +7,7 @@ import { router } from './router'
 import { useAuthStore } from '@/stores/auth'
 import './style.css'
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
+import { useToastStore } from './stores/toast'
 
 const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)
@@ -18,9 +19,8 @@ app.use(autoAnimatePlugin)
 
 // ← ВАЖНО: Ждём, пока восстановится сессия!
 const authStore = useAuthStore()
-
 async function bootstrap() {
-  await authStore.loadUser()  // ← Ждём ответа от /profile/me
+  await authStore.loadUser() 
   console.log('Сессия восстановлена:', authStore.isAuthenticated ? 'Да' : 'Нет')
 
   app.mount('#app')  // ← Только теперь монтируем приложение
