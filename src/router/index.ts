@@ -29,11 +29,23 @@ const router = createRouter({
 })
 
 // ЖЕЛЕЗНЫЙ ГАРД — РАБОТАЕТ КАК В ПРОДАКШЕНЕ
-// src/router/index.ts
 router.beforeEach(async (to, from, next) => {
   console.log('Router: переход →', from.path, '→', to.path)
 
-// Запрещаем любой доступ к /vote/* если slug — зарезервированное слово
+  const authStore = useAuthStore()
+
+  // ← ВОТ ЭТА МАГИЯ — ВСЕГДА пытаемся восстановить сессию при первом переходе
+  if (authStore.user === null) {
+    await authStore.loadUser()
+  }
+
+  // ← АВТОРЕДИРЕКТ: если залогинен и идёт на публичные страницы — сразу в кабинет
+  if (authStore.isAuthenticated && (to.path === '/' || to.path === '/login')) {
+    console.log('Пользователь авторизован → редиректим в /cabinet')
+    return next('/cabinet')
+  }
+
+  // Защита от /vote/profile и т.д.
   if (to.path.startsWith('/vote/')) {
     const slug = to.params.typeEventId as string
     const reserved = ['profile', 'cabinet', 'me', 'login', 'events', 'auth', 'vote', '']
@@ -42,14 +54,12 @@ router.beforeEach(async (to, from, next) => {
       return next('/cabinet')
     }
   }
-  const authStore = useAuthStore()
-  if (to.meta.requiresAuth) {
-    await authStore.loadUser()
 
-    if (!authStore.isAuthenticated) {
-      return next('/login')
-    }
+  // Защита приватных роутов
+  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+    return next('/login')
   }
+
   next()
 })
 
