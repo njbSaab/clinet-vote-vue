@@ -4,6 +4,7 @@
       v-if="isOpen"
       class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
       @click.self="close"
+      v-auto-animate
     >
       <div
         class="relative w-full max-w-md bg-gradient-to-b from-zinc-900/95 via-[#0f0029] to-black rounded-3xl border border-white/10 shadow-2xl overflow-hidden"
@@ -28,7 +29,7 @@
           </button>
 
           <!-- Шаг 1 -->
-          <div v-if="step === 1">
+          <div v-if="step === 1" v-auto-animate>
             <h2
               class="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-blue-400 to-red-400 bg-clip-text text-transparent"
             >
@@ -66,7 +67,7 @@
           </div>
 
           <!-- Шаг 2 -->
-          <div v-if="step === 2">
+          <div v-if="step === 2" v-auto-animate>
             <h2
               class="text-4xl font-bold text-center mb-4 bg-gradient-to-r from-blue-400 to-red-400 bg-clip-text text-transparent"
             >
@@ -107,7 +108,7 @@
           </div>
 
           <!-- Успех -->
-          <div v-if="success" class="text-center py-16">
+          <div v-if="success" class="text-center py-16"  v-auto-animate>
             <div
               class="w-24 h-24 mx-auto mb-6 bg-green-500/20 rounded-full flex items-center justify-center"
             >

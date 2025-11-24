@@ -11,7 +11,8 @@ const routes = [
     meta: { requiresAuth: true },
     children: [
       { path: '', name: 'profile', component: () => import('@/pages/dashboard/ProfilePage.vue') },
-      { path: 'events', name: 'my-events', component: () => import('@/pages/dashboard/MyEventsPage.vue') },
+      { path: 'events', name: 'my-events', component: () => import('@/pages/dashboard/MyEventsPage.vue') },   
+      { path: 'details', name: 'details', component: () => import('@/pages/dashboard/MyDeteils.vue') },
     ],
   },
   { 
@@ -57,7 +58,7 @@ router.beforeEach(async (to, from, next) => {
 
   // Защита приватных роутов
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    return next('/login')
+    return next('/')
   }
 
   next()

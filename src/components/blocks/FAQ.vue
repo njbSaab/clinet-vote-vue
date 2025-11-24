@@ -21,7 +21,8 @@ const data = [
 <template>
   <section class="h-full py-6 md:py-12 faq overflow-x-hidden overflow-y-auto" id="faq">
     <div class="container">
-      <h2 class="text-center text-5xl font-bold mb-12 bg-gradient-to-r from-blue-400 to-red-400 bg-clip-text text-transparent">
+      <h2 class="text-center text-5xl font-bold mb-12 bg-gradient-to-r
+       from-blue-600 to-red-600 bg-clip-text text-transparent">
         FAQ
       </h2>
 

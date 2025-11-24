@@ -75,11 +75,12 @@ const handleLogin = () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-b from-black via-[#0a001f] to-black text-white">
+  <div class="min-h-screen bg-gradient-to-b from-black via-[#0a001f] to-black text-white"
+  v-auto-animate>
     <Header />
 
-    <main class="container mx-auto px-4 pt-24 min-h-[86dvh]">
-      <div class="max-w-md mx-auto">
+    <main class="container mx-auto px-4 md:pt-24 pt-32 min-h-[85.5dvh]  md:min-h-[77dvh]">
+      <div class="max-w-md mx-auto" v-auto-animate>
         <!-- Заголовок -->
         <h1 class="text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-blue-500 to-red-500 bg-clip-text text-transparent">
           <span class="block animate__animated animate__fadeInDown">
@@ -88,7 +89,7 @@ const handleLogin = () => {
         </h1>
 
         <!-- РЕГИСТРАЦИЯ -->
-        <div v-if="isRegister">
+        <div v-if="isRegister" v-auto-animate>
           <!-- Первый шаг — ввод имени и email -->
           <form v-if="!showCodeForm" @submit.prevent="startRegister" class="space-y-8">
             <div>
@@ -155,7 +156,7 @@ const handleLogin = () => {
         </div>
 
         <!-- ВХОД (пока заглушка) -->
-        <form v-else @submit.prevent="handleLogin" class="space-y-8">
+        <form v-else @submit.prevent="handleLogin" class="space-y-8" v-auto-animate>
           <div>
             <label class="block text-lg mb-3 opacity-90">Email</label>
             <input

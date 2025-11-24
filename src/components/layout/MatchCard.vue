@@ -14,21 +14,21 @@ const props = defineProps<{
     <!-- <div class="card-decor card-decor--first"></div>
     <div class="card-decor card-decor--second"></div> -->
 
-    <div class="card-primary">
+    <div class="card-primary" v-auto-animate>
       <div class="card-primary-inner flex flex-col items-center justify-center gap-lg">
         <div class="card-primary-text flex-col-center">
           <h5
             class="card-primary-title bg-gradient-to-r from-blue-300 via-white to-red-300 bg-clip-text text-transparent text-[35px] md:text-[50px] font-bold text-center leading-[1.1]"
           >
-            {{ event?.title || "Событие завершилось..." }}
+            {{ event?.title || "Загрузка" }}
           </h5>
           <p class="card-primary-text text-center text-xl text-white">
-            {{ event?.sport || "ожидайте новое голосование" }}
+            {{ event?.sport || "ожидайте голосование" }}
             <span class="card-primary-subtext block text-center">
               {{
                 event?.votingEndsAt
                   ? new Date(event.votingEndsAt).toLocaleDateString("ru-RU")
-                  : "ожидайте новое голосование"
+                  : "ожидайте голосование"
               }}
             </span>
           </p>

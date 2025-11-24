@@ -2,17 +2,19 @@
 const props = defineProps<{
   event: EventData | null;
 }>();
+const isVisible = ref(false);
 </script>
 <template>
-  <section class="h-full py-6 md:py-12 main-prize overflow-x-hidden overflow-y-auto" id="main-prize">
+  <section class="h-full py-6 pb-10 md:py-12 main-prize overflow-x-hidden overflow-y-auto"  id="how-it-work">
     <div class="container">
       <h2
-        class="text-center text-5xl font-bold mb-12 bg-gradient-to-r from-blue-400 to-red-400 bg-clip-text text-transparent"
+        class="text-center text-5xl font-bold mb-12 bg-gradient-to-r 
+        from-blue-600 to-red-600 bg-clip-text text-transparent"
       >
         Главный приз
       </h2>
 
-      <div class="main-prize-items max-w-screen-md mx-auto my-6 md:my-12">
+      <div class="main-prize-items max-w-screen-md mx-auto my-6 md:my-12" v-auto-animate>
         <div class="main-prize-item glow-breath w-[90%] md:min-w-[400px] md:w-fit mx-auto">
           <h3
             class="text-6xl md:text-7xl lg:text-8xl text-center font-bold py-[20px] leading-tight"
@@ -21,9 +23,24 @@ const props = defineProps<{
           </h3>
         </div>
 
-        <p class="text-center text-4xl md:text-6xl text-white/70 mt-6 md:mt-12 pt-6">
-          {{ event?.everyoneForPrize || "Каждый прогноз — это твой шанс" }}
+        <p class="text-center text-white/70 mt-6 md:mt-12 pt-6 cursor-pointer"
+        @click="isVisible = !isVisible">
+        <span v-auto-animate class="md:text-[38px] text-2xl"> Каждый прогноз — это твой шанс выиграть главны призы!
+          <span v-show="!isVisible">👇</span>
+          <span v-show="isVisible">👆</span>
+        </span>
+        <span>{{ event?.everyoneForPrize }}</span>
+        <span class="present text-[130px] flex justify-center items-center pt-[0px] scale-anim" v-if="!isVisible">
+          🎁
+        </span>
         </p>
+          <ul v-if="isVisible" class="text-lg md:text-xl text-white/70 bg-shadow-inset py-4 px-2 prize-list w-[90%] md:w-fit mx-auto md:p-[20px] mt-4 md:mt-[20px] md:pl-[60px] md:pr-[60px]"  v-auto-animate>
+            <li class="md:ml-[-35px] text-3xl md:text-4xl bg-gradient-to-r 
+        from-blue-500 to-red-500 bg-clip-text text-transparent pb-[10px]"> 📌 - Гланый приз {{ event?.grandPrize || "Первый приз" }}</li>
+            <li class="text-2xl text-red-400"> 📌 - 20 баллов {{ event?.secondPrize || "Чашка" }}</li>
+            <li class="text-2xl text-blue-400"> 📌 - 30 баллов {{ event?.secondPrize || "Футболка" }}</li>
+            <li class="text-2xl"> 📌 - 50 баллов {{ event?.secondPrize || "Куртка" }}</li>
+          </ul>
       </div>
     </div>
   </section>
@@ -90,6 +107,12 @@ const props = defineProps<{
     box-shadow: 0 0 20px rgba(0, 150, 255, 0), inset 0 0 20px rgba(0, 150, 255, 0);
     transform: scale(1);
   }
+
+}
+.prize-list{
+    box-shadow: 0 0 30px 10px rgba(255, 255, 255, 0.7),
+    inset 0 0 40px rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.4);
 }
 /* Запускаем */
 .glow-breath {

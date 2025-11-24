@@ -20,7 +20,7 @@ const data = [
   <footer class="h-full py-6 pb-4 md:pt-12 footer overflow-x-hidden overflow-y-auto bg-gradient-main container md:max-w-[779px]">
     <div class="container">
       <div class="footer-social-items max-w-screen-md mx-auto">
-        <ul class="flex items-center justify-center gap-[8px] md:gap-8 flex-wrap">
+        <ul class="flex items-center justify-center gap-[8px] md:gap-8 flex-wrap" v-auto-animate>
           <li v-for="item in data" :key="item.id">
             <a 
               :id="item.title" 

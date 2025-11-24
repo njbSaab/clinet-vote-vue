@@ -30,8 +30,8 @@ const props = defineProps<{
         <div class="card-decor card-decor--second"></div> -->
 
         <!-- Карточка матча (теперь отдельный компонент с декорами!) -->
-
-        <div v-if="event?.typeEventId"
+        <div class="v-card w-full md:max-w-[450px] mx-auto" v-if="event?.typeEventId"
+          v-auto-animate
           :to="{ name: 'vote', params: { typeEventId: event.typeEventId } }">
           <MatchCard :event="event" />
         </div>
@@ -43,7 +43,7 @@ const props = defineProps<{
 
         <!-- Таймер -->
         <div class="footer-wrapper flex flex-col gap-6">
-          <div class="timer-group">
+          <div class="timer-group" v-auto-animate>
             <p class="text-white text-center">До события осталось:</p>
             <p
               class="text-3xl md:text-5xl text-white text-center font-bold bg-shadow-inset px-4 py-4"
@@ -72,14 +72,9 @@ const props = defineProps<{
                 {{ String(seconds).padStart(2, "0") }}
               </span>
             </p>
-
             <!-- Если закончилось -->
-            <p
-              v-if="isExpired"
-              class="text-4xl font-bold text-red-500 animate-pulse mt-4"
-            >
-              Событие завершено!
-            </p>
+            <div class="skeleton h-[80px] w-full" v-if="isExpired"></div>
+
           </div>
         </div>
 

@@ -2,10 +2,10 @@
   <div class="min-h-screen bg-gradient-to-b from-black via-[#0a001f] to-black text-white">
     <Header />
 
-    <main class="container mx-auto px-4 pt-20 min-h-[86dvh]">
-      <div class="max-w-md mx-auto">
+    <main class="container mx-auto px-4 pt-[3.66rem] min-h-[86dvh]">
+      <div class="max-w-md mx-auto" v-auto-animate>
 
-        <h1 class="text-4xl mt-[15px] mb-[30px] md:text-5xl font-bold text-center md:mb-8 bg-gradient-to-r from-blue-500 to-red-500 bg-clip-text text-transparent">
+        <h1 class="text-4xl mt-[20px] mb-[15px] md:text-5xl font-bold text-center md:mb-6 bg-gradient-to-r from-blue-500 to-red-500 bg-clip-text text-transparent">
           <span class="block animate__animated animate__fadeInDown">Проголосовать</span>
         </h1>
 
@@ -20,7 +20,7 @@
         </div>
 
         <!-- Событие загружено -->
-        <div v-else-if="event">
+        <div v-else-if="event" v-auto-animate>
           <MatchCard :event="event" />
 
           <!-- Радиокнопки -->
@@ -28,7 +28,7 @@
             'blue': selectedChois === 'participantA',
             'red': selectedChois === 'participantB',
             'white': selectedChois === 'draw'
-          }">
+          }" v-auto-animate>
             <input v-model="selectedChois" value="participantA" id="participantA" type="radio" />
             <label for="participantA" class="flex items-center gap-3 participant-label">
               <img :src="event.logoA" :alt="event.participantA" class="w-10 h-10 rounded-full object-contain transition-all">
@@ -51,7 +51,7 @@
           <button 
             @click="openAuthModal" 
             :disabled="timer.expired"
-            class="w-full py-5 rounded-2xl font-bold text-xl bg-gradient-to-r from-blue-600 to-red-600 hover:from-blue-500 hover:to-red-500 transition-all duration-300 transform hover:scale-105 disabled:opacity-70 disabled:cursor-not-allowed mt-8 mb-[30px]"
+            class="w-full py-5 rounded-2xl font-bold text-xl bg-gradient-to-r from-blue-600 to-red-600 hover:from-blue-500 hover:to-red-500 transition-all duration-300 transform hover:scale-105 disabled:opacity-70 disabled:cursor-not-allowed mb-[30px]"
           >
             {{ timer.expired ? 'Голосование окончено' : 'Голосовать' }}
           </button>

@@ -68,9 +68,10 @@ onUnmounted(() => stopAutoPlay());
 </script>
 
 <template>
-  <section class="h-full py-6 md:py-16 pb-0">
+  <section class="h-full md:py-16 pb-0" id="all-of-matches">
     <div class="container mx-auto text-center">
-      <h2 class="text-4xl md:text-6xl font-bold mb-12 bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
+      <h2 class="text-4xl md:text-6xl font-bold mb-12 bg-gradient-to-r
+       from-blue-600 to-red-600 bg-clip-text text-transparent">
         Текущие события
       </h2>
 
@@ -167,8 +168,8 @@ onUnmounted(() => stopAutoPlay());
 }
 @media screen and (max-width: 640px) {
   .scene {
-    width: 90%;
-    height: 300px;
+    width: 86%;
+    height: 285px;
   }
   
 }

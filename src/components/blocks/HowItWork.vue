@@ -25,7 +25,7 @@ const data = [
 ];
 </script>
 <template>
-  <section class="h-full md:py-12 py-6 how-it-work overflow-x-hidden overflow-y-auto" id="how-it-work">
+  <section class="h-full md:py-12 py-6 pb-[3.5rem] how-it-work overflow-x-hidden overflow-y-auto pt-0">
     <div class="container">
       <div class="text-center">
         <h2
