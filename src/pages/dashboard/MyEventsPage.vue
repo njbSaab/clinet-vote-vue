@@ -6,7 +6,7 @@
     <!-- Если нет голосов -->
     <div v-if="!user?.votesHistory || user.votesHistory.length === 0" class="text-center py-20">
       <p class="text-2xl text-white/60">Вы ещё не голосовали</p>
-      <router-link to="/" class="mt-6 inline-block px-8 py-4 bg-gradient-to-r from-blue-600 to-red-600 rounded-xl font-bold hover:scale-105 transition">
+      <router-link to="/" class="mt-6 inline-block px-8 py-4 bg-gradient-to-r from-blue-600 to-red-600 rounded-[35px] font-bold hover:scale-105 transition">
         Перейти к событиям
       </router-link>
     </div>

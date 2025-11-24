@@ -3,12 +3,12 @@
     <main class="container mx-auto pt-[15px] px-[20px] mb-0 min-h-[77dvh]">
       <div class="max-w-4xl mx-auto" v-auto-animate>
         <!-- Табы -->
-        <div class="flex justify-center gap-8 mb-8 border-b border-white/20 w-fit mx-auto">
+        <div class="flex justify-center gap-8 mb-8 border-b border-white/20 w-fit mx-auto mt-[10px]">
         <router-link
             to="/"
-            class="pb-4 px-6 text-xl font-medium transition relative"
+            class="pb-[.5rem] px-6 text-xl font-medium transition relative"
             :class="{
-              'text-white border-b-4 border-blue-500': !$route.path.includes('/cabinet/'),
+              'text-white border-b-4 border-white': !$route.path.includes('/cabinet/'),
               'text-white/60 hover:text-white': $route.path.includes('/cabinet/')
             }"
           >
@@ -19,7 +19,7 @@
 
           <router-link
             to="/cabinet/details"
-            class="pb-4 px-6 text-xl font-medium transition relative"
+            class="pb-[.5rem] px-6 text-xl font-medium transition relative"
             :class="{
               'text-white border-b-4 border-blue-500': $route.path.includes('/details'),
               'text-white/60 hover:text-white': !$route.path.includes('/details')
@@ -31,7 +31,7 @@
 
           <router-link
             to="/cabinet/events"
-            class="pb-4 px-6 text-xl font-medium transition"
+            class="pb-[.5rem] px-6 text-xl font-medium transition"
             :class="{
               'text-white border-b-4 border-red-500': $route.path.includes('events'),
               'text-white/60 hover:text-white': !$route.path.includes('events')
@@ -41,7 +41,7 @@
           </router-link>
 
 
-          <div class="logout cursor-pointer" @click="logout">
+          <div class="logout cursor-pointer hover-gradient" @click="logout">
             <svg class="p-0" xmlns="http://www.w3.org/2000/svg" width="35px" height="35px" viewBox="0 0 24 24"><!-- Icon from Google Material Icons by Material Design Authors - https://github.com/material-icons/material-icons/blob/master/LICENSE --><path fill="currentColor" d="M9 2h9c1.1 0 2 .9 2 2v16c0 1.1-.9 2-2 2H9c-1.1 0-2-.9-2-2v-2h2v2h9V4H9v2H7V4c0-1.1.9-2 2-2" /><path fill="currentColor" d="M10.09 15.59L11.5 17l5-5l-5-5l-1.41 1.41L12.67 11H3v2h9.67z" /></svg>
           </div>
         </div>

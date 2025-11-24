@@ -5,15 +5,15 @@
           Твоя статистика {{ user?.name }}!
     </h1>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12" v-auto-animate>
-      <div class="bg-white/5 backdrop-blur rounded-2xl p-8 text-center bg-shadow-light">
+      <div class="bg-white/5 backdrop-blur rounded-[35px] p-8 text-center bg-shadow-light">
         <p class="text-white/60 text-lg">Всего голосов</p>
         <p class="text-5xl font-bold mt-2">{{ user?.totalVotes || 0 }}</p>
       </div>
-      <div class="bg-white/5 backdrop-blur rounded-2xl p-8 text-center bg-shadow-blue">
+      <div class="bg-white/5 backdrop-blur rounded-[35px] p-8 text-center bg-shadow-blue">
         <p class="text-white/60 text-lg">Баллы</p>
         <p class="text-5xl font-bold mt-2 text-blue-400">{{ user?.points || 0 }}</p>
       </div>
-      <div class="bg-white/5 backdrop-blur rounded-2xl p-8 text-center bg-shadow-red">
+      <div class="bg-white/5 backdrop-blur rounded-[35px] p-8 text-center bg-shadow-red">
         <p class="text-white/60 text-lg">Точность</p>
         <p class="text-5xl font-bold mt-2 text-red-400">{{ user?.stats?.accuracy || 0 }}%</p>
       </div>
@@ -25,7 +25,7 @@
       <div 
         v-for="vote in user.votesHistory" 
         :key="vote.votedAt"
-        class="bg-white/5 backdrop-blur rounded-2xl p-6 border border-white/10"
+        class="bg-white/5 backdrop-blur p-6 border border-white/10 rounded-[35px]"
       >
         <div class="flex justify-between items-center mb-4">
           <div>
